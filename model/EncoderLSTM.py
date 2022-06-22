@@ -5,14 +5,13 @@ class EncoderLSTM(nn.Module):
         super().__init__()
 
         self.encoder_embedding = nn.Embedding(num_embeddings=input_vocab, embedding_dim=emb_dim)
-        self.lstm = nn.LSTM(input_size=input_dim, hidden_size=hidden_dim, num_layers=n_layers, dropout =p )
+        self.lstm = nn.LSTM(input_size=emb_dim, hidden_size=hidden_dim, num_layers=n_layers, dropout =p )
         self.dropout = nn.Dropout(p=p)
 
-    def forward(self, x):
+    def forward(self, x,input_lengths):
 
         x = self.encoder_embedding(x)
         x= self.dropout(x)
 
         output, (h_n, c_n) = self.lstm(x)
-
-        return h_n, c_n
+        return output, h_n, c_n
